@@ -1,3 +1,5 @@
+var  cartNum = 0;
+
 function getCard(data){
 
     let url_image = data.url_image;
@@ -16,6 +18,11 @@ function getCard(data){
                 <h5 class="card-title">${data.name}</h5>
                 <p class="card-text">Price: $${data.price}</p>
                 <p class="card-text text-success">Discount: ${data.discount}</p>
+                <div class="row">
+                    <div class="col-1 offset-8">
+                        <button type="button" class="btn btn-outline-warning anadirCarro"><i class="fa fa-shopping-cart"></i></button>
+                    </div>
+                </div>
             </div>
         </div>
     </div>`;
@@ -77,8 +84,6 @@ window.onload = async function() {
     titulo.innerHTML = 'bebida energetica';
     cards.innerHTML = htmls;
 
-    console.log(contador);
-
     let botonesPaginacion = '';
     let numPags = Math.ceil(contador/10)
     for (let index = 1; index<numPags+1;index++){
@@ -90,6 +95,12 @@ window.onload = async function() {
         element.onclick = function(){
             searchPageCategory(index, 1)
         }
+    }
+    const addToCart = document.getElementsByClassName('anadirCarro');
+
+    for (let i = 0; i < addToCart.length; i++) {
+        boton = addToCart[i];
+        boton.addEventListener('click', addToCartClicked)
     }
   };
 
@@ -116,7 +127,7 @@ async function searchCategory(category, category_id){
 
     titulo.innerHTML = category;
     cards.innerHTML = htmls;
-    console.log(contador);
+
     let botonesPaginacion = '';
     let numPags = Math.ceil(contador/10)
     for (let index = 1; index<numPags+1;index++){
@@ -128,6 +139,12 @@ async function searchCategory(category, category_id){
         element.onclick = function(){
             searchPageCategory(index, category_id)
         }
+    }
+    const addToCart = document.getElementsByClassName('anadirCarro');
+
+    for (let i = 0; i < addToCart.length; i++) {
+        boton = addToCart[i];
+        boton.addEventListener('click', addToCartClicked)
     }
 }
 
@@ -153,8 +170,14 @@ async function searchProducts(name, discount){
     titulo.innerHTML = 'Resultados busqueda';
     cards.innerHTML = htmls;
     paginacion.innerHTML = '';
-}
+    
+    const addToCart = document.getElementsByClassName('anadirCarro');
 
+    for (let i = 0; i < addToCart.length; i++) {
+        boton = addToCart[i];
+        boton.addEventListener('click', addToCartClicked)
+    }
+}
 
 
 const categories = {
@@ -174,7 +197,7 @@ Object.entries(categories).forEach((e) => {
     }
 });
 
-var formulario = document.getElementById("busqueda")
+var formulario = document.getElementById("busqueda");
 
 formulario.onsubmit = (e)=>{
     e.preventDefault()
@@ -186,7 +209,56 @@ formulario.onsubmit = (e)=>{
         discount = 0;
     }
 
-    searchProducts(name, discount)
+    searchProducts(name, discount);
+};
 
+  
+function addToCartClicked(e) {
+    button = e.target;
+    var cartItem = button.parentElement.parentElement.parentElement.parentElement;
+    var nombre = cartItem.getElementsByClassName('card-title')[0].innerText;
+    var precio = cartItem.getElementsByClassName('card-text')[0].innerText;
+    addItemToCart (nombre, precio);
+}
 
+function addItemToCart(nombre, precio) {
+    var divFila = document.createElement('div');
+    var filaProducto = document.createElement('li');
+    var productosCart = document.getElementsByClassName('dropdown-menu')[2];
+    var textoCarro = document.getElementsByClassName('carro-texto');
+    
+    for (var i = 0; i < textoCarro .length; i++){
+      if (textoCarro[i].innerText == nombre){
+        alert ('El producto ya esta en el carro')
+        return;
+      }
+    }
+
+    cartNum += 1
+    var badgeCart = document.getElementsByClassName('cart-quantity')[0];
+    badgeCart.innerHTML = cartNum;
+
+    var filaProductoHTML = `
+        <div class="dropdown-item carro-texto" >${nombre}</div>
+        <button type="button" class="btn btn btn-light remove-btn"><i class="fa fa-trash"></i></button>
+    `
+    filaProducto.innerHTML = filaProductoHTML;
+    divFila.append(filaProducto);
+    productosCart.append(divFila);
+    divFila.getElementsByClassName('remove-btn')[0].addEventListener('click', removeItem)
+
+}
+
+const removeBtn = document.getElementsByClassName('remove-btn');
+for (var i = 0; i < removeBtn.length; i++) {
+  button = removeBtn[i]
+  button.addEventListener('click', removeItem)
+}
+
+function removeItem(e) {
+    btnClicked = e.target;
+    btnClicked.parentElement.parentElement.remove();
+    cartNum -= 1;
+    var badgeCart = document.getElementsByClassName('cart-quantity')[0];
+    badgeCart.innerHTML = cartNum;
 }
