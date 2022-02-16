@@ -1,18 +1,17 @@
 from flask import request, Response
-from flask_cors import CORS
-from flask_api import FlaskAPI
+from flask import Flask
+from flask_cors import CORS, cross_origin
 import json
 import mysql.connector
 from mysql.connector import errorcode
 import pandas as pd
 
-app = FlaskAPI(__name__)
-
+app = Flask(__name__)
 CORS(app)
-
 
 # --- Ruta para solicitar informacion de productos por categoria y pagina (segun paginacion)
 @app.route('/read', methods=['GET'])
+@cross_origin()
 def read():
     category = int(request.args.get('category_id'))
     page = int(request.args.get('page'))
@@ -42,6 +41,7 @@ def read():
 
 # --- Ruta para busqueda de informacion de productos por nombre y descuento
 @app.route('/filter', methods=['GET'])
+@cross_origin()
 def filter():
     name = request.args.get('name')
     print(f"nombre: {name}")
@@ -76,6 +76,7 @@ def filter():
 
 # --- Ruta para solicitar informacion de numero de productos en cierta categoria
 @app.route('/count', methods=['GET'])
+@cross_origin()
 def count():
     category_id = int(request.args.get('category_id'))
     try:
