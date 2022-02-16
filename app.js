@@ -33,7 +33,7 @@ function getCard(data){
 
 // INICIO --- Extraer numero de productos por categoria (para paginacion)
 async function fetchCountCat(category_id){
-    const response = await fetch(`http://localhost:5000/count?category_id=${category_id}`,{
+    const response = await fetch(`https://api-bsale-jm.herokuapp.com/count?category_id=${category_id}`,{
         method: 'GET'
       }
     )
@@ -46,7 +46,7 @@ async function fetchCountCat(category_id){
 async function searchPageCategory(page, category_id){
 
     async function fetchPageCat(category_id){
-		const response = await fetch(`http://localhost:5000/read?category_id=${category_id}&page=${page}`,{
+		const response = await fetch(`https://api-bsale-jm.herokuapp.com/read?category_id=${category_id}&page=${page}`,{
             method: 'GET'
           }
         )
@@ -73,7 +73,7 @@ window.onload = async function() {
     let contador = await fetchCountCat(1);
 
     async function fetchPage(){
-		const response = await fetch("http://localhost:5000/read?category_id=1&page=1",{
+		const response = await fetch("https://api-bsale-jm.herokuapp.com/read?category_id=1&page=1",{
             method: 'GET'
           }
         )
@@ -119,7 +119,7 @@ async function searchCategory(category, category_id){
     let contador = await fetchCountCat(category_id);
 
     async function fetchPageCat(category_id){
-		const response = await fetch(`http://localhost:5000/read?category_id=${category_id}&page=1`,{
+		const response = await fetch(`https://api-bsale-jm.herokuapp.com/read?category_id=${category_id}&page=1`,{
             method: 'GET'
           }
         )
@@ -164,7 +164,7 @@ async function searchCategory(category, category_id){
 async function searchProducts(name, discount){
 
     async function fetchPageProd(name, discount){
-		const response = await fetch(`http://localhost:5000/filter?name=${name}&discount=${discount}&page=1`,{
+		const response = await fetch(`https://api-bsale-jm.herokuapp.com//filter?name=${name}&discount=${discount}&page=1`,{
             method: 'GET'
           }
         )
