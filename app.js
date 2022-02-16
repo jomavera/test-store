@@ -214,18 +214,18 @@ formulario.onsubmit = (e)=>{
 
   
 function addToCartClicked(e) {
-    button = e.target;
+    var button = e.target;
     var cartItem = button.parentElement.parentElement.parentElement.parentElement;
     var nombre = cartItem.getElementsByClassName('card-title')[0].innerText;
     var precio = cartItem.getElementsByClassName('card-text')[0].innerText.match(/(?<=[$])\d*/)[0];
-    addItemToCart (nombre, precio);
+    addItemToCart(nombre, precio);
 }
 
 function addItemToCart(nombre, precio) {
     var divFila = document.createElement('div');
     divFila.classList.add('dropdown-item');
     var filaProducto = document.createElement('li');
-    var productosCart = document.getElementsByClassName('dropdown-menu')[2];
+    let productosCarro = document.getElementsByClassName('dropdown-menu')[2];
     var textoCarro = document.getElementsByClassName('carro-texto');
     
     for (var i = 0; i < textoCarro .length; i++){
@@ -241,37 +241,56 @@ function addItemToCart(nombre, precio) {
 
     var filaProductoHTML = `
         <div class="carro-texto" >${nombre}</div>
+        <input class="cantidad-producto" type="number" value="1">
         <div class="carro-precio" >$${precio}</div>
         <button type="button" class="btn btn btn-light remove-btn"><i class="fa fa-trash"></i></button>
     `
     filaProducto.innerHTML = filaProductoHTML;
     divFila.append(filaProducto);
-    productosCart.append(divFila);
+    productosCarro.append(divFila);
 
-    divFila.getElementsByClassName('remove-btn')[0].addEventListener('click', quitarProducto);
-    actualizarPrecioCarro(productosCart);
+    var botonBorrar = divFila.getElementsByClassName('remove-btn')[0];
+    botonBorrar.addEventListener('click', quitarProducto);
+    var input = divFila.getElementsByClassName('cantidad-producto')[0];
+    input.addEventListener('change', changeQuantity);
+    actualizarPrecioCarro(productosCarro);
 }
 
 function quitarProducto(e) {
     var btnClicked = e.target;
-    btnClicked.parentElement.parentElement.remove();
+    var parentBtnClicked = btnClicked.parentElement.parentElement;
+    parentBtnClicked.remove();
     cartNum -= 1;
     var badgeCarro = document.getElementsByClassName('carro-cantidad')[0];
     badgeCarro.innerHTML = cartNum;
-    var productosCart = document.getElementsByClassName('dropdown-menu')[2];
-    actualizarPrecioCarro(productosCart)
+    let productosCarro = document.getElementsByClassName('dropdown-menu')[2];
+    actualizarPrecioCarro(productosCarro)
 }
 
-function actualizarPrecioCarro(productosCart) {
+function changeQuantity(event) {
+  var input = event.target
+  if (isNaN(input.value) || input.value <= 0){
+    input.value = 1
+  }
+  let productosCarro = document.getElementsByClassName('dropdown-menu')[2];
+  actualizarPrecioCarro(productosCarro)
+}
+
+function actualizarPrecioCarro(productosCarro) {
     var total = 0
-    let productosLista = productosCart.getElementsByClassName('dropdown-item');
-    console.log(productosLista)
+    let productosLista = productosCarro.getElementsByClassName('dropdown-item');
+
     for (var i = 0; i < productosLista.length; i ++) {
       var filaCarro = productosLista[i]
-      var precioElemento = filaCarro.getElementsByClassName('carro-precio')[0]
-      var precio = parseFloat(precioElemento.innerText.replace('$', ''))
-      total = total + precio
+      if (filaCarro.hasChildNodes()) {
+        var precioElemento = filaCarro.getElementsByClassName('carro-precio')[0]
+        var cantidadElemento = filaCarro.getElementsByClassName('cantidad-producto')[0].value
+        var precio = parseFloat(precioElemento.innerText.replace('$', ''))
+        total = total + (precio*cantidadElemento)
+      } else {
+          filaCarro.remove();
+      }
       
     }
     document.getElementsByClassName('total-precio')[0].innerText =  'Total Carro $' + total
-  }
+}
