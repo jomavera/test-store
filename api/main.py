@@ -11,6 +11,7 @@ app = FlaskAPI(__name__)
 CORS(app)
 
 
+# --- Ruta para solicitar informacion de productos por categoria y pagina (segun paginacion)
 @app.route('/read', methods=['GET'])
 def read():
     category = int(request.args.get('category_id'))
@@ -39,6 +40,7 @@ def read():
     else:
         conn.close()
 
+# --- Ruta para busqueda de informacion de productos por nombre y descuento
 @app.route('/filter', methods=['GET'])
 def filter():
     name = request.args.get('name')
@@ -72,6 +74,7 @@ def filter():
     else:
         conn.close()
 
+# --- Ruta para solicitar informacion de numero de productos en cierta categoria
 @app.route('/count', methods=['GET'])
 def count():
     category_id = int(request.args.get('category_id'))

@@ -1,5 +1,6 @@
-var  cartNum = 0;
+var  cartNum = 0; //Numero de productos en el carro (variable global)
 
+// INICIO --- Generar carta de producto
 function getCard(data){
 
     let url_image = data.url_image;
@@ -27,8 +28,10 @@ function getCard(data){
         </div>
     </div>`;
     return html_
-}
+};
+// FIN --- Generar carta de producto
 
+// INICIO --- Extraer numero de productos por categoria (para paginacion)
 async function fetchCountCat(category_id){
     const response = await fetch(`http://localhost:5000/count?category_id=${category_id}`,{
         method: 'GET'
@@ -37,7 +40,9 @@ async function fetchCountCat(category_id){
     let data = await response.json();
     return data[0].cuenta;
 }
+// FIN --- Extraer numero de productos por categoria (para paginacion)
 
+// INICIO ---  Extraer info de productos por categoria por pagina (segun paginacion) y generar cartas
 async function searchPageCategory(page, category_id){
 
     async function fetchPageCat(category_id){
@@ -58,8 +63,11 @@ async function searchPageCategory(page, category_id){
     }
 
     cards.innerHTML = htmls;
-}
+};
+// FIN --- Extraer info de productos por categoria por pagina (segun paginacion)
 
+
+// INICIO --- Al cargar pagina inicial extraer info de productos de categoria 1, pagina 1 y generar cartas
 window.onload = async function() {
 
     let contador = await fetchCountCat(1);
@@ -102,8 +110,10 @@ window.onload = async function() {
         boton = addToCart[i];
         boton.addEventListener('click', addToCartClicked)
     }
-  };
+};
+// FIN --- Al cargar pagina inicial extraer info de productos de categoria 1, pagina 1 y generar cartas
 
+// INICIO --- Extraer info de productos por categoria en pagina 1 (segun paginacion) y generar cartas
 async function searchCategory(category, category_id){
 
     let contador = await fetchCountCat(category_id);
@@ -146,8 +156,11 @@ async function searchCategory(category, category_id){
         boton = addToCart[i];
         boton.addEventListener('click', addToCartClicked)
     }
-}
+};
+// FIN --- Extraer info de productos por categoria en pagina 1 (segun paginacion) y generar cartas
 
+
+// INICIO --- Extraer info de productos por busqueda y generar cartas
 async function searchProducts(name, discount){
 
     async function fetchPageProd(name, discount){
@@ -177,9 +190,11 @@ async function searchProducts(name, discount){
         boton = addToCart[i];
         boton.addEventListener('click', addToCartClicked)
     }
-}
+};
+// FIN --- Extraer info de productos por busqueda y generar cartas
 
 
+// INICIO --- Anadir funcionalidad a botones de categorias en el navbar
 const categories = {
     'bebida energetica': 1,
     'pisco':2,
@@ -188,7 +203,7 @@ const categories = {
     'snack':5,
     'cerveza':6,
     'vodka':7
-}
+};
 
 Object.entries(categories).forEach((e) => {
     var element = document.getElementById(e[0]);
@@ -211,15 +226,17 @@ formulario.onsubmit = (e)=>{
 
     searchProducts(name, discount);
 };
+// FIN --- Anadir funcionalidad a botones de categorias en el navbar
 
-  
+
+// INICIO --- Funciones relacionadas al shopping car  
 function addToCartClicked(e) {
     var button = e.target;
     var cartItem = button.parentElement.parentElement.parentElement.parentElement;
     var nombre = cartItem.getElementsByClassName('card-title')[0].innerText;
     var precio = cartItem.getElementsByClassName('card-text')[0].innerText.match(/(?<=[$])\d*/)[0];
     addItemToCart(nombre, precio);
-}
+};
 
 function addItemToCart(nombre, precio) {
     var divFila = document.createElement('div');
@@ -254,7 +271,7 @@ function addItemToCart(nombre, precio) {
     var input = divFila.getElementsByClassName('cantidad-producto')[0];
     input.addEventListener('change', changeQuantity);
     actualizarPrecioCarro(productosCarro);
-}
+};
 
 function quitarProducto(e) {
     var btnClicked = e.target;
@@ -274,7 +291,7 @@ function changeQuantity(event) {
   }
   let productosCarro = document.getElementsByClassName('dropdown-menu')[2];
   actualizarPrecioCarro(productosCarro)
-}
+};
 
 function actualizarPrecioCarro(productosCarro) {
     var total = 0
@@ -293,4 +310,5 @@ function actualizarPrecioCarro(productosCarro) {
       
     }
     document.getElementsByClassName('total-precio')[0].innerText =  'Total Carro $' + total
-}
+};
+// FIN --- Funciones relacionadas al shopping car  
