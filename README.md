@@ -23,7 +23,7 @@ El fron-end esta construida en **HTML** y **Javascript**. Para el estilo se uso 
 
 ### API
 
-Implementado en **Python** con la liberia **Flask**. Para conectarse a la base de datos se usó el conector de Python para MySQL `mysql-connector-python`. Para realizar las consultas se uso `pandas` para evitar un paso intermedio de construir un `dict` con la información de las respuesta de la base de datos.
+Implementado en **Python** con la liberia **Flask**. Para conectarse a la base de datos se usó el conector de Python para MySQL `mysql-connector-python`. Para realizar las consultas se uso `pandas` para evitar un paso intermedio de construir un `dict` con la información de las respuesta de la base de datos. El API tiene tres *endpoints*:
 
 #### Productos por categoria y pagina
 ```
