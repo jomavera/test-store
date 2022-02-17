@@ -23,9 +23,11 @@ El fron-end esta construida en **HTML** y **Javascript**. Para el estilo se uso 
 
 ### API
 
-Implementado en **Python** con la liberia **Flask**. Para conectarse a la base de datos se usó el conector de Python para MySQL `mysql-connector-python`. Para realizar las consultas se uso `pandas` para evitar un paso intermedio de construir un `dict` con la información de las respuesta de la base de datos. El API tiene tres *endpoints*:
+Implementado en **Python** con la liberia **Flask**. Para conectarse a la base de datos se usó el conector de Python para MySQL `mysql-connector-python`. Para realizar las consultas se uso `pandas` para evitar un paso intermedio de construir un `dict` con la información de las respuesta de la base de datos. 
 
-#### Productos por categoria y pagina
+El API esta disponible en https://api-bsale-jm.herokuapp.com/ y tiene tres *endpoints*:
+
+1. Productos por categoria y pagina
 ```
   [GET] /read?category_id=<CATEGORY_ID>&page=<PAGE>
   Content-Type: "application/json"
@@ -41,7 +43,7 @@ Implementado en **Python** con la liberia **Flask**. Para conectarse a la base d
 ]
 ```
 
-#### Productos por nombre y/o descuento
+2. Productos por nombre y/o descuento
 ```
   [GET] /filter?name=<NAME>&discount=<DISCOUNT>
   Content-Type: "application/json"
@@ -57,7 +59,7 @@ Implementado en **Python** con la liberia **Flask**. Para conectarse a la base d
 ]
 ```
 
-#### Conteo del número de productos de cierta categoria
+3. Conteo del número de productos de cierta categoria
 ```
   [GET] /count?category_id=<CATEGORY_ID>
   Content-Type: "application/json"
@@ -69,3 +71,7 @@ Implementado en **Python** con la liberia **Flask**. Para conectarse a la base d
   { cuenta: 5 }
 ]
 ```
+
+## Despliegue
+
+Ambos components fueron desplegados en Heroku
