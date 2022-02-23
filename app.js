@@ -169,7 +169,7 @@ async function searchCategory(category, category_id){
 async function searchProducts(name, discount){
     async function fetchPageProd(name, discount){
 		const response = await fetch(
-            `https://api-bsale-jm.herokuapp.com//filter?name=${name}&discount=${discount}&page=1`,
+            `https://api-bsale-jm.herokuapp.com/filter?name=${name}&discount=${discount}&page=1`,
             {
                 method: 'GET'
             }
