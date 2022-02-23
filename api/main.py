@@ -23,7 +23,12 @@ def read():
                                 host='mdb-test.c6vunyturrl6.us-west-1.rds.amazonaws.com',
                                 database='bsale_test')
 
-        df = pd.read_sql_query(f"SELECT * FROM product WHERE category = {category} LIMIT {limit} OFFSET {offset} ",con=conn)
+        params = {
+        'category': category,
+        'limit': limit,
+        'offset': offset
+        }
+        df = pd.read_sql_query("""SELECT * FROM product WHERE category = %(category)s LIMIT %(limit)s OFFSET %(offset)s""",con=conn, params=params)
         result = df.to_json(orient="records")
         parsed = json.loads(result)
         conn.close()
@@ -36,6 +41,7 @@ def read():
             print("Database does not exist")
         else:
             print(err)
+        conn.close()
     else:
         conn.close()
 
@@ -44,7 +50,6 @@ def read():
 @cross_origin()
 def filter():
     name = request.args.get('name')
-    print(f"nombre: {name}")
     discount = int(request.args.get('discount'))
     page = int(request.args.get('page'))
     limit = 10
@@ -55,10 +60,16 @@ def filter():
                                 host='mdb-test.c6vunyturrl6.us-west-1.rds.amazonaws.com',
                                 database='bsale_test')
 
+        params = {
+            'name': '%'+name+'%',
+            'limit':limit,
+            'offset': offset,
+            'discount':discount
+        }
         if name == '':
-            df = pd.read_sql_query(f"SELECT * FROM product WHERE discount >= {discount} LIMIT {limit} OFFSET {offset} ",con=conn)
+            df = pd.read_sql_query("""SELECT * FROM product WHERE discount >= %(discount)s LIMIT %(limit)s OFFSET %(offset)s """,con=conn, params=params)
         else:
-            df = pd.read_sql_query(f"SELECT * FROM product WHERE name LIKE '%{name}%' AND discount >= {discount} LIMIT {limit} OFFSET {offset} ",con=conn)
+            df = pd.read_sql_query("""SELECT * FROM product WHERE name LIKE %(name)s AND discount >= %(discount)s LIMIT %(limit)s OFFSET %(offset)s """,con=conn, params=params)
         result = df.to_json(orient="records")
         parsed = json.loads(result)
         conn.close()
@@ -71,6 +82,7 @@ def filter():
             print("Database does not exist")
         else:
             print(err)
+        conn.close()
     else:
         conn.close()
 
@@ -85,7 +97,10 @@ def count():
                                 host='mdb-test.c6vunyturrl6.us-west-1.rds.amazonaws.com',
                                 database='bsale_test')
 
-        df = pd.read_sql_query(f"SELECT COUNT(*) AS cuenta FROM product WHERE category = {category_id}",con=conn)
+        params = {
+            'category_id':category_id
+        }
+        df = pd.read_sql_query("""SELECT COUNT(*) AS cuenta FROM product WHERE category = %(category_id)s""",con=conn, params=params)
 
         result = df.to_json(orient="records")
         parsed = json.loads(result)
@@ -99,6 +114,7 @@ def count():
             print("Database does not exist")
         else:
             print(err)
+        conn.close()
     else:
         conn.close()
 
